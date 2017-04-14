@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>臺北市公車及Youbike現況</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+
+	
+</head>
+<body>
+
+
+
+<div id="mapid" style="width: 1680px; height: 920px;"></div>
+<script>
+
+	var mymap = L.map('mapid').setView([25.04, 121.54], 13);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(mymap);
+
+	{% for pt in entries['bus_pt'] %}
+		L.circle([{{pt['y']}}, {{pt['x']}}], 7, {
+				color: 'red',
+				fillColor: '#f03',
+				fillOpacity: 0.5
+		}).addTo(mymap).bindPopup("<b>公車</b> <br> 車牌: {{pt['p']}} <br> 車速: {{pt['s']}}");
+	{% endfor %}
+
+	{% for pt in entries['ubike_pt'] %}
+		L.circle([{{pt['y']}}, {{pt['x']}}], 7, {
+				color: 'green',
+				fillColor: '#0f3',
+				fillOpacity: 0.5
+		}).addTo(mymap).bindPopup("<b>Youbike</b> <br> 站名: {{pt['n']}} <br> 空位: {{pt['b']}} <br> 車子: {{pt['c']}}");
+	{% endfor %}
+	
+	var popup = L.popup();
+
+
+</script>
+
+
+
+</body>
+</html>
